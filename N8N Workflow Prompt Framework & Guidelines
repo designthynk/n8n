@@ -1,0 +1,257 @@
+N8N Workflow Prompt Framework & Guidelines
+🎯 The PRECISE Framework for N8N Workflow Prompts
+Use this structured approach to craft prompts that generate optimal n8n workflows:
+P - Purpose & Problem Statement
+What to Include:
+
+Clear, specific description of the workflow's objective
+Business problem being solved
+Success criteria and expected outcomes
+User personas who will interact with the workflow
+
+Example:
+"Create a customer support workflow that automatically categorizes incoming support emails, 
+routes them to appropriate teams, and generates initial response suggestions using AI. 
+Success means 90% accurate categorization and 50% faster response times."
+R - Requirements & Resources
+What to Include:
+
+Specific node types required (AI Agent, HTTP Request, etc.)
+External integrations needed (Salesforce, Gmail, Slack, etc.)
+Data sources and destinations
+Processing volume expectations
+Performance requirements
+
+Example:
+"Requirements:
+- Email Trigger node for IMAP monitoring
+- AI Agent with GPT-4 for categorization and response generation
+- Salesforce integration for ticket creation
+- Slack notifications for urgent issues
+- Handle 100+ emails daily
+- Response time under 30 seconds"
+E - Exact Data Flow & Structure
+What to Include:
+
+Input data format and source
+Data transformations needed
+Output format requirements
+Specific field mappings
+Error data handling
+
+Example:
+"Data Flow:
+Input: Email with subject, body, sender, attachments
+Transform: Extract key information, categorize priority (1-5), generate tags
+Output: JSON with {category, priority, suggestedResponse, assignedTeam, ticketId}
+Error Handling: Invalid emails go to manual review queue"
+C - Configuration Specifics
+What to Include:
+
+AI model preferences and parameters
+Authentication requirements
+Environment variables
+Rate limiting needs
+Memory/context requirements
+
+Example:
+"Configuration:
+- OpenAI: model='gpt-4', temperature=0.3 for consistent categorization
+- Memory: maintain conversation context for follow-up emails
+- Credentials: Gmail OAuth2, Salesforce API key, Slack webhook
+- Rate limits: max 10 AI calls per minute"
+I - Integration Details
+What to Include:
+
+Specific API endpoints and operations
+Field mappings between systems
+Webhook configurations
+Third-party service requirements
+
+Example:
+"Integrations:
+- Salesforce: Create case with fields (Subject, Description, Priority, Origin='Email')
+- Slack: Post to #support-alerts for priority 1-2 issues
+- Gmail: Mark emails as processed, add labels based on category"
+S - Safety & Error Handling
+What to Include:
+
+Fallback mechanisms
+Error notification requirements
+Data validation rules
+Security considerations
+
+Example:
+"Safety Measures:
+- If AI categorization confidence < 70%, route to human review
+- Failed Salesforce API calls retry 3 times, then email admin
+- Sensitive data detection triggers secure handling process
+- All API calls use stored credentials, never hardcoded keys"
+E - Expected Output Format
+What to Include:
+
+JSON structure requirements
+Node naming conventions
+Documentation needs
+Testing requirements
+
+Example:
+"Output Requirements:
+- Complete JSON workflow ready for import
+- Descriptive node names (e.g., 'AI Agent - Email Categorization')
+- Sticky notes documenting key decision points
+- All connections properly mapped
+- No placeholder values or incomplete configurations"
+
+🛠️ Detailed Prompt Template
+Complete Prompt Structure:
+I need an n8n workflow that [PURPOSE AND PROBLEM STATEMENT].
+
+**WORKFLOW REQUIREMENTS:**
+- Trigger: [Specific trigger type and configuration]
+- Processing: [Node types and operations needed]
+- Integrations: [External services and APIs]
+- Output: [What the workflow should produce]
+
+**DATA SPECIFICATIONS:**
+- Input Format: [Exact structure of incoming data]
+- Transformations: [How data should be modified]
+- Output Format: [Required output structure]
+- Volume: [Expected data volume and frequency]
+
+**AI AGENT CONFIGURATION (if applicable):**
+- Model: [Specific AI model and parameters]
+- System Message: [Detailed role and behavior instructions]
+- Tools: [Required tools and their purposes]
+- Memory: [Context retention requirements]
+
+**INTEGRATION DETAILS:**
+- [Service 1]: [Specific operations and field mappings]
+- [Service 2]: [Authentication and configuration needs]
+- [Service 3]: [Rate limits and error handling]
+
+**ERROR HANDLING & SAFETY:**
+- Validation Rules: [Data quality checks]
+- Fallback Actions: [What happens when things fail]
+- Notifications: [Who gets alerted and when]
+- Security: [Data protection requirements]
+
+**OUTPUT REQUIREMENTS:**
+- Format: Complete JSON workflow for n8n import
+- Documentation: Include explanatory sticky notes
+- Testing: Specify any test scenarios
+- Credentials: Use generic references (e.g., "{{ myGmailCreds }}")
+
+**CONSTRAINTS & PREFERENCES:**
+- Performance: [Response time requirements]
+- Cost: [Budget considerations for AI calls]
+- Maintenance: [Update frequency and complexity tolerance]
+
+📋 Quick Checklist for Prompt Quality
+✅ Essential Elements (Must Have):
+
+ Clear workflow purpose and success criteria
+ Specific node types and integrations needed
+ Exact input/output data formats
+ Error handling requirements
+ Complete JSON output specification
+
+⭐ Enhanced Elements (Should Have):
+
+ AI model preferences and parameters
+ Performance and volume requirements
+ Security and authentication details
+ Testing scenarios and validation rules
+ Documentation and naming conventions
+
+🚀 Advanced Elements (Nice to Have):
+
+ Scalability considerations
+ Cost optimization preferences
+ Monitoring and alerting requirements
+ Integration with existing systems
+ Future enhancement possibilities
+
+
+🎯 Example High-Quality Prompt
+I need an n8n workflow that creates an intelligent customer onboarding system for SaaS companies.
+
+**WORKFLOW REQUIREMENTS:**
+- Trigger: Webhook from Stripe when new subscription created
+- Processing: AI Agent analyzes customer data and creates personalized onboarding plan
+- Integrations: Salesforce (customer records), HubSpot (email sequences), Slack (team notifications)
+- Output: Automated email sequence and task assignments for customer success team
+
+**DATA SPECIFICATIONS:**
+- Input Format: Stripe webhook payload with customer_id, plan_type, billing_amount
+- Transformations: Enrich with company data, determine onboarding track, generate personalized content
+- Output Format: JSON with {onboardingPlan, emailSequence, taskAssignments, successScore}
+- Volume: 20-50 new customers daily
+
+**AI AGENT CONFIGURATION:**
+- Model: gpt-4 with temperature=0.4 for consistent personalization
+- System Message: "You are a customer success specialist who creates tailored onboarding experiences based on customer profile, industry, and subscription tier."
+- Tools: Customer data lookup, email template generator, task priority calculator
+- Memory: Retain customer interaction history for follow-up communications
+
+**INTEGRATION DETAILS:**
+- Salesforce: Create/update Customer record with onboarding status and next steps
+- HubSpot: Enroll in appropriate email workflow based on customer segment
+- Slack: Notify assigned CSM with customer overview and recommended actions
+
+**ERROR HANDLING & SAFETY:**
+- Validation: Verify Stripe webhook authenticity and required fields
+- Fallback: If AI fails, use default onboarding template for customer tier
+- Notifications: Alert operations team for any integration failures
+- Security: Encrypt all customer data in transit and use OAuth2 for all API calls
+
+**OUTPUT REQUIREMENTS:**
+- Format: Complete JSON workflow ready for n8n import
+- Documentation: Sticky notes explaining decision logic and AI prompts
+- Testing: Include test webhook payload for verification
+- Credentials: Use references like "{{ stripeWebhook }}", "{{ salesforceOAuth }}"
+
+**CONSTRAINTS & PREFERENCES:**
+- Performance: Complete processing within 60 seconds of webhook receipt
+- Cost: Optimize AI calls to stay under $0.50 per customer
+- Maintenance: Self-documenting with clear node names and error messages
+
+🔧 Common Pitfalls to Avoid
+❌ Vague Requirements:
+
+"Create a workflow for email processing"
+"I need AI to help with customer service"
+"Build something that works with Salesforce"
+
+✅ Specific Requirements:
+
+"Create a workflow that processes support emails, categorizes by urgency using AI, and creates Salesforce cases"
+"I need an AI agent that analyzes customer sentiment and routes to appropriate support tiers"
+"Build a workflow that syncs new Salesforce leads to HubSpot and triggers personalized email sequences"
+
+❌ Missing Critical Details:
+
+No data format specifications
+No error handling requirements
+No integration specifics
+No performance expectations
+
+✅ Complete Specifications:
+
+Exact JSON structures for input/output
+Detailed error handling and fallback procedures
+Specific API operations and field mappings
+Clear performance and volume requirements
+
+
+🎉 Pro Tips for Maximum Success
+
+Be Specific About AI Behavior: Instead of "use AI to process", specify "use AI to extract key entities (name, email, issue type) and classify urgency on 1-5 scale"
+Include Real Examples: Provide sample input data and expected output formats
+Think About Edge Cases: What happens with malformed data, API failures, or unexpected volumes?
+Consider the Human Factor: Who will maintain this workflow? What level of complexity is appropriate?
+Plan for Growth: How should the workflow scale as volume increases?
+Security First: Always specify authentication, data protection, and access control requirements
+Test-Driven Thinking: Include specific test scenarios and success criteria
+
+Remember: The more detailed and structured your prompt, the more accurate and complete your n8n workflow will be!
